@@ -1,0 +1,29 @@
+[package]
+name = "nico_bbs"
+version = "0.1.0"
+authors = ["toof-jp <toof.jp.mail@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.72"
+chrono = "0.4"
+derive_more = "0.99.17"
+dotenvy = "0.15.7"
+envy = "0.4.2"
+html-escape = "0.2.13"
+html5ever = "0.26.0"
+kuchikiki = "0.8.2"
+lazy_static = "1.4.0"
+markup5ever = "0.11.0"
+niconico = "0.2.0"
+regex = "1.9.3"
+reqwest = { version = "0.12", features = ["json", "cookies"] }
+scraper = "0.12.0"
+secrecy = "0.10.3"
+select = "0.6.0"
+serde = { version = "1.0.181", features = ["derive"] }
+sqlx = { version = "0.7.4", features = [ "chrono", "postgres", "runtime-tokio-native-tls" ] }
+tempfile = "3.7.0"
+tokio = { version = "1.37.0", features = [ "full" ] }

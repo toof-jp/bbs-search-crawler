@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO oekaki (oekaki_id, oekaki_title, original_oekaki_res_no)\n        VALUES ($1, $2, $3)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f4c0555f7397f41d1b23b0671088002a7b157a88f51291dcf25939379df4f927"
+}
