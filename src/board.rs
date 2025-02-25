@@ -1,6 +1,3 @@
-use std::fs::{create_dir_all, File};
-use std::io::copy;
-use std::path::Path;
 use std::time::Duration;
 
 use anyhow::Result;
@@ -197,7 +194,8 @@ impl Board {
         &mut self,
         pool: &sqlx::PgPool,
         user_session: &UserSession,
-        save_dir: &str,
+        s3_client: &aws_sdk_s3::Client,
+        bucket_name: &str,
     ) {
         const INTERVAL: Duration = Duration::new(5, 0);
 
@@ -226,7 +224,7 @@ impl Board {
                         insert_res(pool, &res).await.unwrap();
                         if let Some(o) = oekaki {
                             insert_oekaki(pool, &o).await.unwrap();
-                            self.download_oekakiko(user_session, &o, save_dir)
+                            self.save_oekakiko(user_session, &o, s3_client, bucket_name)
                                 .await
                                 .unwrap();
                         }
@@ -242,21 +240,28 @@ impl Board {
         }
     }
 
-    async fn download_oekakiko(
+    async fn save_oekakiko(
         &mut self,
         user_session: &UserSession,
         oekaki: &Oekaki,
-        save_dir: &str,
+        s3_client: &aws_sdk_s3::Client,
+        bucket_name: &str,
     ) -> Result<()> {
         let response = self
             .get_with_hash_key(&oekaki.get_url(&self.bbs_id), user_session)
             .await?;
-
         let bytes = response.bytes().await?;
-        create_dir_all(save_dir)?;
-        let file_path = Path::new(save_dir).join(format!("{}.png", oekaki.oekaki_id));
-        let mut file = File::create(file_path)?;
-        copy(&mut bytes.as_ref(), &mut file)?;
+
+        s3_client.put_object()
+            .bucket(bucket_name)
+            .key(format!("{}.png", oekaki.oekaki_id))
+            .body(aws_sdk_s3::primitives::ByteStream::from(bytes))
+            .content_type("image/png")
+            .content_encoding("inline")
+            .send()
+            .await?;
+
+        dbg!("uploaded {}", oekaki.oekaki_id);
 
         Ok(())
     }
