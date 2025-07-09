@@ -1,6 +1,5 @@
 # bbs-search-crawler
-## Environment Variables
-- `DATABASE_URL`
-- `MAIL_TEL`
-- `PASSWORD`
-- `SAVE_DIR`
+
+このリポジトリは [github.com/toof-jp/bbs](https://github.com/toof-jp/bbs) に移行されました。
+
+This repository has been migrated to [github.com/toof-jp/bbs](https://github.com/toof-jp/bbs).
